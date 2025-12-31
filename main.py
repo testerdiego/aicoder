@@ -30,8 +30,11 @@ with st.sidebar:
 
     linguagem = st.selectbox(
         "Selecione a linguagem:",
-        ["Python", "C#", "JavaScript", "Java"]
+        ["Python 🐍", "C# 🎵", "JavaScript ✨", "Java ☕"]
     )
+
+        # Extrai nome puro da linguagem (sem emoji)
+    linguagem_pura = linguagem.rsplit(" ", 1)[0]
     
     # Campo para inserir a chave de API da Groq
     # groq_api_key = os.getenv("GROQ_API_KEY")
@@ -53,10 +56,10 @@ with st.sidebar:
 # st.title("AI Coder")
 
 # Subtítulo adicional
-st.title("Assistente Pessoal de Programação")
+st.title(f"Assistente Pessoal de Programação {linguagem.split()[1]}")
 
 # Texto auxiliar abaixo do título
-st.caption(f"Faça sua pergunta sobre a Linguagem {linguagem} e obtenha código, explicações e referências.")
+st.caption(f"Faça sua pergunta sobre a linguagem {linguagem_pura} e obtenha código, explicações e referências.")
 
 # Inicializa o histórico de mensagens na sessão, caso ainda não exista
 if "messages" not in st.session_state:
@@ -78,7 +81,7 @@ except Exception as e:
         st.stop()
 
 # Captura a entrada do usuário no chat
-if prompt := st.chat_input("Qual sua dúvida sobre {language}"):
+if prompt := st.chat_input(f"Qual sua dúvida sobre {linguagem_pura}"):
     
     # Se não houver cliente válido, mostra aviso e para a execução
     if not client:
@@ -93,7 +96,7 @@ if prompt := st.chat_input("Qual sua dúvida sobre {language}"):
         st.markdown(prompt)
 
 # Monta prompt do sistema dinamicamente
-    system_prompt = build_programming_prompt(linguagem)
+    system_prompt = build_programming_prompt(linguagem_pura)
     messages_for_api = [{"role": "system", "content": system_prompt}]
     messages_for_api += st.session_state.messages
 
